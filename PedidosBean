@@ -1,0 +1,142 @@
+ackage LoginBean;
+
+import Controlador.PedidosFacadeLocal;
+import Entities.Pedidos;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+import javax.ejb.EJB;
+import javax.inject.Named;
+import javax.enterprise.context.Dependent;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+
+/**
+ *
+ * @author felip
+ */
+@Named(value = "pedidosBean")
+@Dependent
+@ManagedBean
+@SessionScoped
+public class PedidosBean  implements Serializable{
+    
+ @EJB
+    private  PedidosFacadeLocal pedidosFacadeLocal;
+    private List<Pedidos> listaPedidoses;
+    private Pedidos pedidos;
+    
+    
+    private int Id;
+    private String Nombre_Prodcuto;
+    private int Cantidad_Producto;
+    private  float Precio_Unitario;
+    private String Direccion;
+    private Date Fecha_pro;
+    private String mensajes;
+ public List<Pedidos> getListaRegistro() {
+        this.listaPedidoses = this.pedidosFacadeLocal.findAll();
+                
+               
+        return listaPedidoses;
+    }
+    public String getMensajes() {
+        return mensajes;
+    }
+
+    public void setMensajes(String mensajes) {
+        this.mensajes = mensajes;
+    }
+
+    public List<Pedidos> getListaPedidoses() {
+        return listaPedidoses;
+    }
+
+    public void setListaPedidoses(List<Pedidos> listaPedidoses) {
+        this.listaPedidoses = listaPedidoses;
+    }
+
+    
+    public Pedidos getPedidos() {
+        return pedidos;
+    }
+
+    public void setPedidos(Pedidos pedidos) {
+        this.pedidos = pedidos;
+    }
+
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int Id) {
+        this.Id = Id;
+    }
+
+    public String getNombre_Prodcuto() {
+        return Nombre_Prodcuto;
+    }
+
+    public void setNombre_Prodcuto(String Nombre_Prodcuto) {
+        this.Nombre_Prodcuto = Nombre_Prodcuto;
+    }
+
+    public int getCantidad_Producto() {
+        return Cantidad_Producto;
+    }
+
+    public void setCantidad_Producto(int Cantidad_Producto) {
+        this.Cantidad_Producto = Cantidad_Producto;
+    }
+
+    public float getPrecio_Unitario() {
+        return Precio_Unitario;
+    }
+
+    public void setPrecio_Unitario(float Precio_Unitario) {
+        this.Precio_Unitario = Precio_Unitario;
+    }
+
+    public String getDireccion() {
+        return Direccion;
+    }
+
+    public void setDireccion(String Direccion) {
+        this.Direccion = Direccion;
+    }
+
+    public Date getFecha_pro() {
+        return Fecha_pro;
+    }
+
+    public void setFecha_pro(Date Fecha_pro) {
+        this.Fecha_pro = Fecha_pro;
+    }
+     
+    
+    public void init (){
+        this.pedidos = new Pedidos () ;
+    }
+     public void registrarPedidos(){
+      try {
+          this.pedidos.setId(Id);
+          this.pedidos.setNombreProducto(Nombre_Prodcuto);
+          this.pedidos.setCantidadProducto(Cantidad_Producto);
+          this.pedidos.setPrecioUnitario(Precio_Unitario);
+          this.pedidos.setDireccion(Direccion);
+          this.pedidos.setFechaPro(Fecha_pro);
+          this.pedidosFacadeLocal.create(pedidos);
+       
+          this.mensajes = "Registro Creado Correctamente";
+      } catch (Exception e) {
+                      e.printStackTrace();
+                        FacesMessage mens = new FacesMessage(this.mensajes);
+        FacesContext.getCurrentInstance().addMessage(null, mens);
+      }
+  }
+    public PedidosBean() {
+    }
+    
+}
